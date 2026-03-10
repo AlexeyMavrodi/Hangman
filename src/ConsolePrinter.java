@@ -1,16 +1,24 @@
 public class ConsolePrinter {
 
     public static void welcome() {
-        System.out.println("Добро пожаловать в игру ВИСЕЛИЦА!" +
-                "\nХотите сыграть? (введите цифру)" +
-                "\n1. Начать новую игру." +
-                "\n2. Выйти из приложения.");
+        System.out.println("""
+                Добро пожаловать в игру ВИСЕЛИЦА!\
+                
+                Хотите сыграть? (введите цифру)\
+                
+                1. Начать новую игру.\
+                
+                2. Выйти из приложения.""");
     }
 
     public static void againGame() {
-        System.out.println("\nХотите сыграть ещё раз? (введите цифру)" +
-                "\n1. Начать новую игру." +
-                "\n2. Выйти из приложения.");
+        System.out.println("""
+                
+                Хотите сыграть ещё раз? (введите цифру)\
+                
+                1. Начать новую игру.\
+                
+                2. Выйти из приложения.""");
     }
 
     public static void startGame(String word) {
@@ -21,12 +29,12 @@ public class ConsolePrinter {
         System.out.println("Неверное значение. Попробуйте ещё раз!");
     }
 
-    public static void loseGame() {
-        System.out.println("К сожалению, вы проиграли.");
+    public static void loseGame(String word) {
+        System.out.println("К сожалению, вы проиграли.\nЗагаданное слово: " + word);
     }
 
     public static void winGame(String word) {
-        System.out.println("Вы отгадали слово!" + "\n" + word);
+        System.out.println("Вы отгадали слово!\n" + word);
     }
 
     public static void counterMistakes(int countMistakes, char[] lettersWord) {
@@ -37,15 +45,25 @@ public class ConsolePrinter {
         System.out.println("Введите одну букву!");
     }
 
-    public static void validationInputChar() {
-        System.out.println("Введите букву!");
+    public static void validationInputRussianLetter() {
+        System.out.println("Введите русскую букву!");
     }
 
-    public static void validationInputRepeatChar() {
+    public static void validationInputEnglishLetter() {
+        System.out.println("Введите английскую букву!");
+    }
+
+    public static void validationInputRepeatLetter() {
         System.out.println("Вы уже вводили такую букву!");
     }
 
     public static void guessedLetter() {
         System.out.println("Такая буква есть в слове!");
+    }
+
+    public static void choiceLanguage() {
+        System.out.println("Выберите язык, на котором будет слово:\n" +
+                           "1. Русский\n" +
+                           "2. Английский");
     }
 }

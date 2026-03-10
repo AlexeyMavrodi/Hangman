@@ -1,3 +1,7 @@
+import RandomWordReader.RandomEnglishWordReader;
+import RandomWordReader.RandomRussianWordReader;
+import RandomWordReader.RandomWordReader;
+
 import java.io.IOException;
 import java.util.Scanner;
 
@@ -5,12 +9,17 @@ public class Game {
     private static Scanner scanner;
     private Player player;
     private Word word;
+    private RandomWordReader reader;
 
     public void start() {
         scanner = new Scanner(System.in);
         String choice = scanner.nextLine().trim();
+
         switch(choice) {
-            case "1" -> newGame();
+            case "1" -> {
+                choiceLanguage();
+                newGame();
+            }
             case "2" -> { return; }
             default -> {
                 ConsolePrinter.incorrectValue();
@@ -19,11 +28,26 @@ public class Game {
         }
     }
 
+    private void choiceLanguage() {
+        ConsolePrinter.choiceLanguage();
+        scanner = new Scanner(System.in);
+        String choiceLanguage = scanner.nextLine().trim();
+
+        switch(choiceLanguage) {
+            case "1" -> reader = new RandomRussianWordReader();
+            case "2" -> reader = new RandomEnglishWordReader();
+            default -> {
+                ConsolePrinter.incorrectValue();
+                choiceLanguage();
+            }
+        }
+    }
+
     private void newGame() {
         player = new Player();
 
         try {
-            word = new Word(RandomWordReader.getWord());
+            word = new Word(reader.getWord());
         } catch (IOException e) {
             System.err.println("Не удалось загрузить случайное слово. Используем слово по умолчанию.");
             word = new Word("исключение");
@@ -41,20 +65,25 @@ public class Game {
             ConsolePrinter.counterMistakes(player.getCurrentCountMistakes(), word.getLettersWord());
             String symbol = scanner.nextLine();
 
-            if (symbol.length() > 1 || symbol.length() == 0) {
+            if (symbol.length() != 1) {
                 ConsolePrinter.validationInputLength();
                 continue;
             }
 
-            if (!symbol.matches("[а-яА-Я]")) {
-                ConsolePrinter.validationInputChar();
+            if (reader instanceof RandomRussianWordReader && !symbol.matches("[а-яА-Я]")) {
+                ConsolePrinter.validationInputRussianLetter();
+                continue;
+            }
+
+            if (reader instanceof RandomEnglishWordReader && !symbol.matches("[a-zA-Z]")) {
+                ConsolePrinter.validationInputEnglishLetter();
                 continue;
             }
 
             char ch = symbol.toLowerCase().charAt(0);
 
             if (word.isContainsSet(ch)) {
-                ConsolePrinter.validationInputRepeatChar();
+                ConsolePrinter.validationInputRepeatLetter();
                 continue;
             }
 
@@ -72,7 +101,7 @@ public class Game {
         if (player.isWin()) {
             ConsolePrinter.winGame(word.getWord());
         } else {
-            ConsolePrinter.loseGame();
+            ConsolePrinter.loseGame(word.getWord());
         }
 
         ConsolePrinter.againGame();

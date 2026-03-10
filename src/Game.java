@@ -25,7 +25,8 @@ public class Game {
         try {
             word = new Word(RandomWordReader.getWord());
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            System.err.println("Не удалось загрузить случайное слово. Используем слово по умолчанию.");
+            word = new Word("исключение");
         }
 
         scanner = new Scanner(System.in);

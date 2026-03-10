@@ -7,14 +7,13 @@ public class Game {
     private Word word;
 
     public void start() {
-        System.out.println("Хотите сыграть? (введите цифру)\n1. Начать новую игру.\n2. Выйти из приложения.");
         scanner = new Scanner(System.in);
-        int choice = scanner.nextInt();
+        String choice = scanner.nextLine().trim();
         switch(choice) {
-            case 1 -> newGame();
-            case 2 -> { return; }
+            case "1" -> newGame();
+            case "2" -> { return; }
             default -> {
-                System.out.println("Неверное значение. Попробуйте ещё раз!");
+                ConsolePrinter.incorrectValue();
                 start();
             }
         }
@@ -30,7 +29,7 @@ public class Game {
         }
 
         scanner = new Scanner(System.in);
-        System.out.println("Игра началась! Слово состоит из " + word.getWord().length() + " букв.\nВаша задача попытаться отгадать это слово имея 6 попыток.");
+        ConsolePrinter.startGame(word.getWord());
 
         while (!player.isLoss()) {
             if (!String.valueOf(word.getLettersWord()).contains("_")) {
@@ -38,23 +37,30 @@ public class Game {
                 break;
             }
 
-            System.out.println("Количество ошибок: " + player.getCurrentCountMistakes() + "\n" + String.valueOf(word.getLettersWord()) + "\nВведите букву: ");
+            ConsolePrinter.counterMistakes(player.getCurrentCountMistakes(), word.getLettersWord());
             String symbol = scanner.nextLine();
 
             if (symbol.length() > 1 || symbol.length() == 0) {
-                System.out.println("Введите одну букву!");
+                ConsolePrinter.validationInputLength();
+                continue;
+            }
+
+            if (!symbol.matches("[а-яА-Я]")) {
+                ConsolePrinter.validationInputChar();
                 continue;
             }
 
             char ch = symbol.toLowerCase().charAt(0);
 
-            if (Character.isDigit(ch)) {
-                System.out.println("Необходимо ввести букву!");
+            if (word.isContainsSet(ch)) {
+                ConsolePrinter.validationInputRepeatChar();
                 continue;
             }
 
+            word.addSymbolToSet(ch);
+
             if (word.isLetterInWord(ch)) {
-                System.out.println("Такая буква есть в слове!");
+                ConsolePrinter.guessedLetter();
             } else {
                 player.incrementMistakes();
                 StateGallows state = StateGallows.values()[player.getCurrentCountMistakes() - 1];
@@ -63,11 +69,12 @@ public class Game {
         }
 
         if (player.isWin()) {
-            System.out.println("Вы отгадали слово!" + "\n" + word.getWord());
-            start();
+            ConsolePrinter.winGame(word.getWord());
         } else {
-            System.out.println("К сожалению вы проиграли.");
-            start();
+            ConsolePrinter.loseGame();
         }
+
+        ConsolePrinter.againGame();
+        start();
     }
 }

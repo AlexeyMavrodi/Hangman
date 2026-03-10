@@ -1,11 +1,15 @@
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Word {
     private final String word;
     private char[] lettersWord;
+    private Set<Character> inputChars;
 
     public Word(String word) {
         this.word = word;
+        inputChars = new HashSet<>();
         this.lettersWord = new char[word.length()];
         Arrays.fill(this.lettersWord, '_');
     }
@@ -21,6 +25,14 @@ public class Word {
         }
 
         return found;
+    }
+
+    public void addSymbolToSet(char ch) {
+        inputChars.add(ch);
+    }
+
+    public boolean isContainsSet(char ch) {
+        return inputChars.contains(ch);
     }
 
     public String getWord() {

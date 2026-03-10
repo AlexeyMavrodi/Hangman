@@ -49,7 +49,8 @@ public class Game {
         try {
             word = new Word(reader.getWord());
         } catch (IOException e) {
-            System.err.println("Не удалось загрузить случайное слово. Используем слово по умолчанию.");
+            System.err.println("Не удалось загрузить случайное слово. Используем русское слово по умолчанию.");
+            reader = new RandomRussianWordReader();
             word = new Word("исключение");
         }
 
